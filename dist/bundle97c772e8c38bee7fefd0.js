@@ -2,6 +2,234 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/checkStorage.js":
+/*!*****************************!*\
+  !*** ./src/checkStorage.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function checkStorage() {
+  if (localStorage.getItem("tasks")) {
+    return JSON.parse(localStorage.getItem("tasks"));
+  } else {
+    return [{
+      foldername: "General",
+      tasks: [{
+        taskName: "Double click to see details and edit",
+        taskDate: "Date Here",
+        taskNotes: "Notes",
+        completed: false
+      }]
+    }];
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (checkStorage);
+
+/***/ }),
+
+/***/ "./src/printMain.js":
+/*!**************************!*\
+  !*** ./src/printMain.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _checkStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkStorage */ "./src/checkStorage.js");
+/* harmony import */ var _printNav_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./printNav.js */ "./src/printNav.js");
+/* harmony import */ var _selectFolder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./selectFolder */ "./src/selectFolder.js");
+/* harmony import */ var _setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./setNewStorage.js */ "./src/setNewStorage.js");
+
+
+
+
+function addSingleTask(folderIndex, taskIndex) {
+  var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  var accordion = document.createElement("details");
+  var summary = document.createElement("summary");
+  accordion.appendChild(summary);
+  var checkbox = document.createElement("input");
+  checkbox.setAttribute("type", "checkbox");
+  if (allTasks[folderIndex].tasks[taskIndex].completed == true) {
+    checkbox.checked = true;
+  } else {
+    checkbox.checked = false;
+  }
+  var taskName = document.createElement("p");
+  taskName.textContent = allTasks[folderIndex].tasks[taskIndex].taskName;
+  var deleteTaskButton = document.createElement("button");
+  deleteTaskButton.textContent = "Delete Task";
+  summary.append(checkbox, taskName, deleteTaskButton);
+  var taskDate = document.createElement("p");
+  taskDate.textContent = allTasks[folderIndex].tasks[taskIndex].taskDate;
+  var taskNotes = document.createElement("p");
+  taskNotes.textContent = allTasks[folderIndex].tasks[taskIndex].taskNotes;
+  accordion.append(taskDate, taskNotes);
+  deleteTaskButton.addEventListener("click", function () {
+    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+    accordion.remove();
+  });
+  return accordion;
+}
+function deleteFolder(folderIndex) {
+  var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  allTasks.splice(folderIndex, 1);
+  (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allTasks);
+  (0,_printNav_js__WEBPACK_IMPORTED_MODULE_1__["default"])(allTasks);
+  (0,_selectFolder__WEBPACK_IMPORTED_MODULE_2__["default"])(folderIndex - 1);
+}
+function addHeading(folderIndex) {
+  var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  var headingSection = document.createElement("section");
+  var folderHeading = document.createElement("h2");
+  folderHeading.textContent = allTasks[folderIndex].foldername;
+  var folderControls = document.createElement("div");
+  var addTaskButton = document.createElement("button");
+  addTaskButton.textContent = "Add Task +";
+  var deleteFolderButton = document.createElement("button");
+  deleteFolderButton.textContent = "Delete Folder";
+  deleteFolderButton.addEventListener("click", function () {
+    deleteFolder(folderIndex);
+  });
+  if (folderIndex == 0) {
+    folderControls.append(addTaskButton);
+  } else {
+    folderControls.append(addTaskButton, deleteFolderButton);
+  }
+  addTaskButton.addEventListener("click", function () {
+    var defaultTask = {
+      taskName: "New Task",
+      taskDate: "New Date",
+      taskNotes: "Notes",
+      completed: false
+    };
+    allTasks[folderIndex].tasks.push(defaultTask);
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allTasks);
+    var tasksSection = document.querySelector("main section:nth-child(2)");
+    tasksSection.appendChild(addSingleTask(folderIndex, allTasks[folderIndex].tasks.length - 1));
+  });
+  headingSection.append(folderHeading, folderControls);
+  return headingSection;
+}
+function addTasks(folderIndex) {
+  var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  var tasksSection = document.createElement("section");
+  for (var i = 0; i < allTasks[folderIndex].tasks.length; i++) {
+    tasksSection.appendChild(addSingleTask(folderIndex, i));
+  }
+  return tasksSection;
+}
+function printMain(folderIndex) {
+  var main = document.querySelector("main");
+  main.replaceChildren(addHeading(folderIndex), addTasks(folderIndex));
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (printMain);
+
+/***/ }),
+
+/***/ "./src/printNav.js":
+/*!*************************!*\
+  !*** ./src/printNav.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _selectFolder_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./selectFolder.js */ "./src/selectFolder.js");
+/* harmony import */ var _checkStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkStorage.js */ "./src/checkStorage.js");
+/* harmony import */ var _setNewStorage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./setNewStorage.js */ "./src/setNewStorage.js");
+
+
+
+function createFolder(folderObject, folderIndex) {
+  var folder = document.createElement("div");
+  folder.textContent = folderObject.foldername;
+  folder.addEventListener("click", function () {
+    (0,_selectFolder_js__WEBPACK_IMPORTED_MODULE_0__["default"])(folderIndex);
+  });
+  return folder;
+}
+function printNav(tasks) {
+  var allTasks = tasks;
+  var folderSection = document.querySelector("nav section");
+  var addFolderButton = document.createElement("button");
+  addFolderButton.textContent = "Add Folder +";
+  var newFolders = document.createElement("section");
+  for (var i = 0; i < allTasks.length; i++) {
+    newFolders.appendChild(createFolder(allTasks[i], i));
+  }
+  addFolderButton.addEventListener("click", function () {
+    var allNewTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+    var defaultFolder = {
+      foldername: "New Folder",
+      tasks: []
+    };
+    allNewTasks.push(defaultFolder);
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_2__["default"])(allNewTasks);
+    newFolders.appendChild(createFolder(defaultFolder, allNewTasks.length - 1));
+    (0,_selectFolder_js__WEBPACK_IMPORTED_MODULE_0__["default"])(allNewTasks.length - 1);
+  });
+  folderSection.replaceChildren(addFolderButton, newFolders);
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (printNav);
+
+/***/ }),
+
+/***/ "./src/selectFolder.js":
+/*!*****************************!*\
+  !*** ./src/selectFolder.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _printMain_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./printMain.js */ "./src/printMain.js");
+/* harmony import */ var _checkStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkStorage.js */ "./src/checkStorage.js");
+
+
+function selectFolder(folderIndex) {
+  var folders = document.querySelectorAll("nav section section div");
+  for (var i = 0; i < folders.length; i++) {
+    folders[i].classList.remove("folder-selected");
+  }
+  folders[folderIndex].classList.add("folder-selected");
+  (0,_printMain_js__WEBPACK_IMPORTED_MODULE_0__["default"])(folderIndex);
+  var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  console.log(allTasks[folderIndex].tasks);
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (selectFolder);
+
+/***/ }),
+
+/***/ "./src/setNewStorage.js":
+/*!******************************!*\
+  !*** ./src/setNewStorage.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function setNewStorage(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (setNewStorage);
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/style.css":
 /*!*************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/style.css ***!
@@ -25,12 +253,19 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
   font-size: 16px;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,eAAe;AACjB;;AAEA;EACE,sBAAsB;EACtB,SAAS;EACT,UAAU;AACZ","sourcesContent":[":root {\n  font-size: 16px;\n}\n\n*, *::before, *::after {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n"],"sourceRoot":""}]);
+
+.folder-selected {
+  background-color: blue;
+  color: white;
+}
+`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,eAAe;AACjB;;AAEA;;;EAGE,sBAAsB;EACtB,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,sBAAsB;EACtB,YAAY;AACd","sourcesContent":[":root {\n  font-size: 16px;\n}\n\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\n.folder-selected {\n  background-color: blue;\n  color: white;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -558,9 +793,18 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ "./src/style.css");
+/* harmony import */ var _checkStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkStorage.js */ "./src/checkStorage.js");
+/* harmony import */ var _printNav_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./printNav.js */ "./src/printNav.js");
+/* harmony import */ var _selectFolder_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./selectFolder.js */ "./src/selectFolder.js");
 
+
+
+
+var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_printNav_js__WEBPACK_IMPORTED_MODULE_2__["default"])(allTasks);
+(0,_selectFolder_js__WEBPACK_IMPORTED_MODULE_3__["default"])(0);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle8d1a76b735b340789acf.js.map
+//# sourceMappingURL=bundle97c772e8c38bee7fefd0.js.map

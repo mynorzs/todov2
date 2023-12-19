@@ -34,11 +34,51 @@ function addSingleTask(folderIndex, taskIndex) {
 
   accordion.append(taskDate, taskNotes);
 
+  if (accordion.open == false) {
+    accordion.addEventListener("click", (evt) => {
+      evt.preventDefault();
+    });
+
+    taskName.addEventListener("dblclick", () => {
+      accordion.open = true;
+      taskName.contentEditable = true;
+      taskNotes.contentEditable = true;
+      taskName.focus();
+    });
+  }
+
   deleteTaskButton.addEventListener("click", () => {
     let allNewTasks = checkStorage();
     allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
     setNewStorage(allNewTasks);
     accordion.remove();
+  });
+
+  taskName.addEventListener("keypress", (evt) => {
+    if (evt.key === "Enter") {
+      evt.preventDefault();
+      evt.target.blur();
+      taskNotes.focus();
+    }
+  });
+
+  taskNotes.addEventListener("keypress", (evt) => {
+    if (evt.key === "Enter") {
+      evt.preventDefault();
+      evt.target.blur();
+    }
+  });
+
+  taskName.addEventListener("focusout", () => {
+    let allNewTasks = checkStorage();
+    allNewTasks[folderIndex].tasks[taskIndex].taskName = taskName.textContent;
+    setNewStorage(allNewTasks);
+  });
+
+  taskNotes.addEventListener("focusout", () => {
+    let allNewTasks = checkStorage();
+    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = taskNotes.textContent;
+    setNewStorage(allNewTasks);
   });
 
   return accordion;

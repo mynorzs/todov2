@@ -11,7 +11,6 @@ function selectFolder(folderIndex) {
   printMain(folderIndex);
 
   let allTasks = checkStorage();
-  console.log(allTasks[folderIndex].tasks);
 }
 
 export default selectFolder;

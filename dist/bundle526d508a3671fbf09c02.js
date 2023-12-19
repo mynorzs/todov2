@@ -71,11 +71,51 @@ function addSingleTask(folderIndex, taskIndex) {
   var taskNotes = document.createElement("p");
   taskNotes.textContent = allTasks[folderIndex].tasks[taskIndex].taskNotes;
   accordion.append(taskDate, taskNotes);
+  if (accordion.open == false) {
+    accordion.addEventListener("click", function (evt) {
+      evt.preventDefault();
+    });
+    taskName.addEventListener("dblclick", function () {
+      accordion.open = true;
+      taskName.contentEditable = true;
+      taskNotes.contentEditable = true;
+      taskName.focus();
+      var cerrar = document.createElement("button");
+      cerrar.textContent = "cerrar";
+      accordion.append(cerrar);
+      cerrar.addEventListener("click", function () {
+        accordion.open = false;
+      });
+    });
+  }
   deleteTaskButton.addEventListener("click", function () {
     var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
     allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
     (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
     accordion.remove();
+  });
+  taskName.addEventListener("keypress", function (evt) {
+    if (evt.key === "Enter") {
+      evt.preventDefault();
+      evt.target.blur();
+      taskNotes.focus();
+    }
+  });
+  taskNotes.addEventListener("keypress", function (evt) {
+    if (evt.key === "Enter") {
+      evt.preventDefault();
+      evt.target.blur();
+    }
+  });
+  taskName.addEventListener("focusout", function () {
+    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    allNewTasks[folderIndex].tasks[taskIndex].taskName = taskName.textContent;
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+  });
+  taskNotes.addEventListener("focusout", function () {
+    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = taskNotes.textContent;
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
   });
   return accordion;
 }
@@ -207,7 +247,6 @@ function selectFolder(folderIndex) {
   folders[folderIndex].classList.add("folder-selected");
   (0,_printMain_js__WEBPACK_IMPORTED_MODULE_0__["default"])(folderIndex);
   var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  console.log(allTasks[folderIndex].tasks);
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (selectFolder);
 
@@ -807,4 +846,4 @@ var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle97c772e8c38bee7fefd0.js.map
+//# sourceMappingURL=bundle526d508a3671fbf09c02.js.map

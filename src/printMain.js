@@ -6,55 +6,53 @@ import setNewStorage from "./setNewStorage.js";
 function addSingleTask(folderIndex, taskIndex) {
   let allTasks = checkStorage();
 
-  const accordion = document.createElement("details");
-  const summary = document.createElement("summary");
-  accordion.appendChild(summary);
+  const singleTask = document.createElement("div");
+  const taskHeader = document.createElement("div");
 
-  const checkbox = document.createElement("input");
-  checkbox.setAttribute("type", "checkbox");
-  if (allTasks[folderIndex].tasks[taskIndex].completed == true) {
-    checkbox.checked = true;
-  } else {
-    checkbox.checked = false;
+  const checkBox = document.createElement("input");
+  checkBox.setAttribute("type", "checkbox");
+
+  if (allTasks[folderIndex].tasks[taskIndex].completed) {
+    checkBox.checked = true;
   }
 
   const taskName = document.createElement("p");
   taskName.textContent = allTasks[folderIndex].tasks[taskIndex].taskName;
+  taskName.contentEditable = true;
 
   const deleteTaskButton = document.createElement("button");
   deleteTaskButton.textContent = "Delete Task";
 
-  summary.append(checkbox, taskName, deleteTaskButton);
+  taskHeader.append(checkBox, taskName, deleteTaskButton);
+
+  const taskInfo = document.createElement("div");
 
   const taskDate = document.createElement("p");
   taskDate.textContent = allTasks[folderIndex].tasks[taskIndex].taskDate;
 
   const taskNotes = document.createElement("p");
   taskNotes.textContent = allTasks[folderIndex].tasks[taskIndex].taskNotes;
+  taskNotes.contentEditable = true;
 
-  accordion.append(taskDate, taskNotes);
+  taskInfo.append(taskDate, taskNotes);
 
-  if (accordion.open == false) {
-    accordion.addEventListener("click", (evt) => {
-      evt.preventDefault();
-    });
+  singleTask.append(taskHeader, taskInfo);
 
-    taskName.addEventListener("dblclick", () => {
-      accordion.open = true;
-      taskName.contentEditable = true;
-      taskNotes.contentEditable = true;
-      taskName.focus();
-    });
-  }
-
-  deleteTaskButton.addEventListener("click", () => {
+  checkBox.addEventListener("click", () => {
     let allNewTasks = checkStorage();
-    allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
+    if (checkBox.checked == true) {
+      allNewTasks[folderIndex].tasks[taskIndex].completed = true;
+    } else {
+      allNewTasks[folderIndex].tasks[taskIndex].completed = false;
+    }
     setNewStorage(allNewTasks);
-    accordion.remove();
   });
 
   taskName.addEventListener("keypress", (evt) => {
+    let allNewTasks = checkStorage();
+    allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+    setNewStorage(allNewTasks);
+
     if (evt.key === "Enter") {
       evt.preventDefault();
       evt.target.blur();
@@ -63,25 +61,42 @@ function addSingleTask(folderIndex, taskIndex) {
   });
 
   taskNotes.addEventListener("keypress", (evt) => {
+    let allNewTasks = checkStorage();
+    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = evt.target.textContent;
+    setNewStorage(allNewTasks);
+
     if (evt.key === "Enter") {
       evt.preventDefault();
       evt.target.blur();
     }
   });
 
-  taskName.addEventListener("focusout", () => {
+  deleteTaskButton.addEventListener("click", () => {
     let allNewTasks = checkStorage();
-    allNewTasks[folderIndex].tasks[taskIndex].taskName = taskName.textContent;
+    allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
     setNewStorage(allNewTasks);
+    singleTask.remove();
   });
 
-  taskNotes.addEventListener("focusout", () => {
-    let allNewTasks = checkStorage();
-    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = taskNotes.textContent;
-    setNewStorage(allNewTasks);
+  taskName.addEventListener("focusout", (evt) => {
+    if (evt.target.textContent == "") {
+      evt.target.textContent = "New Task";
+      let allNewTasks = checkStorage();
+      allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+      setNewStorage(allNewTasks);
+    }
   });
 
-  return accordion;
+  taskNotes.addEventListener("focusout", (evt) => {
+    if (evt.target.textContent == "") {
+      evt.target.textContent = "Notes...";
+      let allNewTasks = checkStorage();
+      allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+      setNewStorage(allNewTasks);
+    }
+  });
+
+  return singleTask;
 
 }
 
@@ -125,7 +140,7 @@ function addHeading(folderIndex) {
     const defaultTask = {
       taskName: "New Task",
       taskDate: "New Date",
-      taskNotes: "Notes",
+      taskNotes: "Notes...",
       completed: false
     }
 

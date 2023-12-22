@@ -7,9 +7,9 @@ function checkStorage() {
         foldername: "General",
         tasks: [
           {
-            taskName: "Double click to see details and edit",
+            taskName: "Task Name, click to edit...",
             taskDate: "Date Here",
-            taskNotes: "Notes",
+            taskNotes: "Task Notes, click to edit...",
             completed: false
           }
         ]

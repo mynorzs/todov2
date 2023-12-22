@@ -19,9 +19,9 @@ function checkStorage() {
     return [{
       foldername: "General",
       tasks: [{
-        taskName: "Double click to see details and edit",
+        taskName: "Task Name, click to edit...",
         taskDate: "Date Here",
-        taskNotes: "Notes",
+        taskNotes: "Task Notes, click to edit...",
         completed: false
       }]
     }];
@@ -51,50 +51,40 @@ __webpack_require__.r(__webpack_exports__);
 
 function addSingleTask(folderIndex, taskIndex) {
   var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
-  var accordion = document.createElement("details");
-  var summary = document.createElement("summary");
-  accordion.appendChild(summary);
-  var checkbox = document.createElement("input");
-  checkbox.setAttribute("type", "checkbox");
-  if (allTasks[folderIndex].tasks[taskIndex].completed == true) {
-    checkbox.checked = true;
-  } else {
-    checkbox.checked = false;
+  var singleTask = document.createElement("div");
+  var taskHeader = document.createElement("div");
+  var checkBox = document.createElement("input");
+  checkBox.setAttribute("type", "checkbox");
+  if (allTasks[folderIndex].tasks[taskIndex].completed) {
+    checkBox.checked = true;
   }
   var taskName = document.createElement("p");
   taskName.textContent = allTasks[folderIndex].tasks[taskIndex].taskName;
+  taskName.contentEditable = true;
   var deleteTaskButton = document.createElement("button");
   deleteTaskButton.textContent = "Delete Task";
-  summary.append(checkbox, taskName, deleteTaskButton);
+  taskHeader.append(checkBox, taskName, deleteTaskButton);
+  var taskInfo = document.createElement("div");
   var taskDate = document.createElement("p");
   taskDate.textContent = allTasks[folderIndex].tasks[taskIndex].taskDate;
   var taskNotes = document.createElement("p");
   taskNotes.textContent = allTasks[folderIndex].tasks[taskIndex].taskNotes;
-  accordion.append(taskDate, taskNotes);
-  if (accordion.open == false) {
-    accordion.addEventListener("click", function (evt) {
-      evt.preventDefault();
-    });
-    taskName.addEventListener("dblclick", function () {
-      accordion.open = true;
-      taskName.contentEditable = true;
-      taskNotes.contentEditable = true;
-      taskName.focus();
-      var cerrar = document.createElement("button");
-      cerrar.textContent = "cerrar";
-      accordion.append(cerrar);
-      cerrar.addEventListener("click", function () {
-        accordion.open = false;
-      });
-    });
-  }
-  deleteTaskButton.addEventListener("click", function () {
+  taskNotes.contentEditable = true;
+  taskInfo.append(taskDate, taskNotes);
+  singleTask.append(taskHeader, taskInfo);
+  checkBox.addEventListener("click", function () {
     var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
+    if (checkBox.checked == true) {
+      allNewTasks[folderIndex].tasks[taskIndex].completed = true;
+    } else {
+      allNewTasks[folderIndex].tasks[taskIndex].completed = false;
+    }
     (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
-    accordion.remove();
   });
   taskName.addEventListener("keypress", function (evt) {
+    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
     if (evt.key === "Enter") {
       evt.preventDefault();
       evt.target.blur();
@@ -102,22 +92,37 @@ function addSingleTask(folderIndex, taskIndex) {
     }
   });
   taskNotes.addEventListener("keypress", function (evt) {
+    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = evt.target.textContent;
+    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
     if (evt.key === "Enter") {
       evt.preventDefault();
       evt.target.blur();
     }
   });
-  taskName.addEventListener("focusout", function () {
+  deleteTaskButton.addEventListener("click", function () {
     var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    allNewTasks[folderIndex].tasks[taskIndex].taskName = taskName.textContent;
+    allNewTasks[folderIndex].tasks.splice(taskIndex, 1);
     (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+    singleTask.remove();
   });
-  taskNotes.addEventListener("focusout", function () {
-    var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    allNewTasks[folderIndex].tasks[taskIndex].taskNotes = taskNotes.textContent;
-    (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+  taskName.addEventListener("focusout", function (evt) {
+    if (evt.target.textContent == "") {
+      evt.target.textContent = "New Task";
+      var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+      allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+      (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+    }
   });
-  return accordion;
+  taskNotes.addEventListener("focusout", function (evt) {
+    if (evt.target.textContent == "") {
+      evt.target.textContent = "Notes...";
+      var allNewTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
+      allNewTasks[folderIndex].tasks[taskIndex].taskName = evt.target.textContent;
+      (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_3__["default"])(allNewTasks);
+    }
+  });
+  return singleTask;
 }
 function deleteFolder(folderIndex) {
   var allTasks = (0,_checkStorage__WEBPACK_IMPORTED_MODULE_0__["default"])();
@@ -148,7 +153,7 @@ function addHeading(folderIndex) {
     var defaultTask = {
       taskName: "New Task",
       taskDate: "New Date",
-      taskNotes: "Notes",
+      taskNotes: "Notes...",
       completed: false
     };
     allTasks[folderIndex].tasks.push(defaultTask);
@@ -197,6 +202,28 @@ function createFolder(folderObject, folderIndex) {
   folder.addEventListener("click", function () {
     (0,_selectFolder_js__WEBPACK_IMPORTED_MODULE_0__["default"])(folderIndex);
   });
+  if (folderIndex > 0) {
+    folder.addEventListener("dblclick", function (evt) {
+      evt.target.contentEditable = true;
+      evt.target.focus();
+      window.getSelection().selectAllChildren(evt.target);
+    });
+    folder.addEventListener("keypress", function (evt) {
+      var tasksHeading = document.querySelector("main section:nth-child(1) h2");
+      tasksHeading.textContent = evt.target.textContent;
+      var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
+      allTasks[folderIndex].foldername = evt.target.textContent;
+      (0,_setNewStorage_js__WEBPACK_IMPORTED_MODULE_2__["default"])(allTasks);
+      if (evt.key === "Enter") {
+        evt.preventDefault();
+        evt.target.blur();
+        evt.target.contentEditable = false;
+      }
+    });
+    folder.addEventListener("focusout", function (evt) {
+      evt.target.contentEditable = false;
+    });
+  }
   return folder;
 }
 function printNav(tasks) {
@@ -211,7 +238,7 @@ function printNav(tasks) {
   addFolderButton.addEventListener("click", function () {
     var allNewTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
     var defaultFolder = {
-      foldername: "New Folder",
+      foldername: "New Folder, double click to edit name...",
       tasks: []
     };
     allNewTasks.push(defaultFolder);
@@ -236,8 +263,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _printMain_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./printMain.js */ "./src/printMain.js");
-/* harmony import */ var _checkStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkStorage.js */ "./src/checkStorage.js");
-
 
 function selectFolder(folderIndex) {
   var folders = document.querySelectorAll("nav section section div");
@@ -246,7 +271,6 @@ function selectFolder(folderIndex) {
   }
   folders[folderIndex].classList.add("folder-selected");
   (0,_printMain_js__WEBPACK_IMPORTED_MODULE_0__["default"])(folderIndex);
-  var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (selectFolder);
 
@@ -301,10 +325,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 }
 
 .folder-selected {
-  background-color: blue;
+  background-color: red;
   color: white;
 }
-`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,eAAe;AACjB;;AAEA;;;EAGE,sBAAsB;EACtB,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,sBAAsB;EACtB,YAAY;AACd","sourcesContent":[":root {\n  font-size: 16px;\n}\n\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\n.folder-selected {\n  background-color: blue;\n  color: white;\n}\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,eAAe;AACjB;;AAEA;;;EAGE,sBAAsB;EACtB,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,qBAAqB;EACrB,YAAY;AACd","sourcesContent":[":root {\n  font-size: 16px;\n}\n\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\n.folder-selected {\n  background-color: red;\n  color: white;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -846,4 +870,4 @@ var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle526d508a3671fbf09c02.js.map
+//# sourceMappingURL=bundleeede38d0f5803606337c.js.map

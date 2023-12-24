@@ -311,24 +311,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;400;700&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `:root {
-  font-size: 16px;
-}
+___CSS_LOADER_EXPORT___.push([module.id, `  :root {
+    font-size: 16px;
+  }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto Slab', serif;
+  }
 
-.folder-selected {
-  background-color: red;
-  color: white;
-}
-`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"AAAA;EACE,eAAe;AACjB;;AAEA;;;EAGE,sBAAsB;EACtB,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,qBAAqB;EACrB,YAAY;AACd","sourcesContent":[":root {\n  font-size: 16px;\n}\n\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\n.folder-selected {\n  background-color: red;\n  color: white;\n}\n"],"sourceRoot":""}]);
+  .folder-selected {
+    background-color: red;
+    color: white;
+  }
+
+  body {
+    display: grid;
+    grid-template: 1fr / auto 1fr;
+  }
+
+  main section:nth-child(1) {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  main section:nth-child(2),
+  main section:nth-child(2)>div,
+  main section:nth-child(2) div div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  main section:nth-child(2) div div:nth-child(1) {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
+`, "",{"version":3,"sources":["webpack://./src/style.css"],"names":[],"mappings":"EAEE;IACE,eAAe;EACjB;;EAEA;;;IAGE,sBAAsB;IACtB,SAAS;IACT,UAAU;IACV,iCAAiC;EACnC;;EAEA;IACE,qBAAqB;IACrB,YAAY;EACd;;EAEA;IACE,aAAa;IACb,6BAA6B;EAC/B;;EAEA;IACE,aAAa;IACb,8BAA8B;EAChC;;EAEA;;;IAGE,aAAa;IACb,sBAAsB;EACxB;;EAEA;IACE,aAAa;IACb,oCAAoC;EACtC;;EAEA;IACE,YAAY;IACZ,6BAA6B;EAC/B;;EAEA;IACE,eAAe;EACjB","sourcesContent":["  @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;400;700&display=swap');\n\n  :root {\n    font-size: 16px;\n  }\n\n  *,\n  *::before,\n  *::after {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n    font-family: 'Roboto Slab', serif;\n  }\n\n  .folder-selected {\n    background-color: red;\n    color: white;\n  }\n\n  body {\n    display: grid;\n    grid-template: 1fr / auto 1fr;\n  }\n\n  main section:nth-child(1) {\n    display: flex;\n    justify-content: space-between;\n  }\n\n  main section:nth-child(2),\n  main section:nth-child(2)>div,\n  main section:nth-child(2) div div:nth-child(2) {\n    display: flex;\n    flex-direction: column;\n  }\n\n  main section:nth-child(2) div div:nth-child(1) {\n    display: grid;\n    grid-template-columns: auto 1fr auto;\n  }\n\n  button {\n    border: none;\n    background-color: transparent;\n  }\n\n  button:hover {\n    cursor: pointer;\n  }\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -870,4 +903,4 @@ var allTasks = (0,_checkStorage_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundleeede38d0f5803606337c.js.map
+//# sourceMappingURL=bundlea03c5d96bc360daac03e.js.map
